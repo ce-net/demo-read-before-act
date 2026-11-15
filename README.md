@@ -8,17 +8,17 @@ their own machine; a one-file Python verifier gets it too, offline.
 
 Built from three reusable cells and two public dependencies: [ce-net-proto](https://github.com/ce-net/ce-net-proto)
 (Apache-2.0: capability chains, CAL and the verifier) and [ce-net-local-dev-sim](https://github.com/ce-net/ce-net-local-dev-sim)
-(a local mesh). Static copy of the page with the recorded run: https://ce-net.github.io/demo-demo-read-before-act/
+(a local mesh). Static copy of the page with the recorded run: https://ce-net.github.io/demo-read-before-act/
 
 ## Run it (under 5 minutes)
 
 Needs git, Rust 1.85 or newer, Python 3.8 or newer and curl.
 
 ```sh
-git clone https://github.com/ce-net/demo-demo-read-before-act
+git clone https://github.com/ce-net/demo-read-before-act
 git clone https://github.com/ce-net/ce-net-local-dev-sim
 python3 ce-net-local-dev-sim/cenet_mock.py 7878 &
-cd demo-demo-read-before-act
+cd demo-read-before-act
 cargo run -p demo-read-before-act -- up
 ```
 
@@ -91,7 +91,7 @@ each must get. ce-net-capability-verify (Python, one file, no ce-net code) repro
 
 ```sh
 git clone https://github.com/ce-net/ce-net-capability-verify
-python3 ce-net-capability-verify/verify.py use demo-demo-read-before-act/proof/vectors.json
+python3 ce-net-capability-verify/verify.py use demo-read-before-act/proof/vectors.json
 ```
 
 ```
