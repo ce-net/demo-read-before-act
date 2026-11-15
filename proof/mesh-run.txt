@@ -1,0 +1,14 @@
+# scripts/mesh-smoke.sh, 2026-11-15T18:24Z, Linux aarch64: the story on ce-net-local-dev-sim
+demo-read-before-act is up: open http://127.0.0.1:7400/
+  route: local mesh: ce-net-local-dev-sim at http://127.0.0.1:7878/mcp (apps_search + mcp_use)
+  act.approve -> http://127.0.0.1:7400/mcp/act.approve
+  cal.explain -> http://127.0.0.1:7400/mcp/cal.explain
+  msg.notice -> http://127.0.0.1:7400/mcp/msg.notice
+route: local mesh: ce-net-local-dev-sim at http://127.0.0.1:7878/mcp (apps_search + mcp_use)
+call 1 act.approve: REFUSED: condition not met: requires
+  clause: require read notice:thread/chg-42@b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431 by node:bob-phone ed25519:557bda3389cc35d391363e475ffee4b606bdbb8456dbb0bbcd0fcec36fe0cf1c within 1d
+call 2 msg.notice.open: RECEIPT SIGNED by ed25519:557bda3389cc35d391363e475ffee4b606bdbb8456dbb0bbcd0fcec36fe0cf1c at 1794767058
+call 3 act.approve: ACCEPTED
+third person cal.explain.verify: ACCEPTED (checked at 1794767059)
+third person, call 1 evidence: REFUSED: condition not met: requires
+ok: refused with the clause, receipt signed, accepted, same verdicts on a fresh verifier

@@ -1,0 +1,20 @@
+[package]
+name = "demo-read-before-act"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Read it before you can act: an approve key that works only after a signed read receipt"
+
+[dependencies]
+ce-net-proto.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+hex.workspace = true
+bincode.workspace = true
+tiny_http.workspace = true
+msg-notice.workspace = true
+act-approve.workspace = true
+cal-explain.workspace = true

@@ -1,0 +1,43 @@
+demo-read-before-act: recorded transcript (fixed demo keys, fixed clock)
+
+Notice chg-42: CHG-42: the billing database moves to the new cluster
+  sha256 b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431
+
+The key Alice gives Bob (CAL):
+  # Alice lets Bob approve change CHG-42 at the change desk, only after his phone has signed a
+  # read receipt for the exact notice text, at most a day before; every use co-signed by Bob.
+  cal 1
+  
+  person:alice grants person:bob {
+    can change.approve:approve
+    on node:change-desk
+    until @1802592000
+    require read notice:thread/chg-42@b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431 by node:bob-phone within 1d
+    cosign person:bob
+    nonce 4242
+  }
+
+call 1 at 1800000010: act.approve.approve by person:bob
+  REFUSED: condition not met: requires
+  clause (link 0, line 7): require read notice:thread/chg-42@b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431 by node:bob-phone ed25519:557bda3389cc35d391363e475ffee4b606bdbb8456dbb0bbcd0fcec36fe0cf1c within 1d
+  why: Every use needs proof that node:bob-phone = ed25519:557bda3389cc35d391363e475ffee4b606bdbb8456dbb0bbcd0fcec36fe0cf1c must attest that the requester has read notice thread chg-42 through message b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431, attested at most 1 day before the use; this use did not present a valid one.
+
+call 2 at 1800000040: msg.notice.open by person:bob
+  RECEIPT SIGNED by ed25519:557bda3389cc35d391363e475ffee4b606bdbb8456dbb0bbcd0fcec36fe0cf1c about ed25519:c728493b4dd1939264133e4fa3cfc59a4e8f52f7944d829e2d4d6e92954aead6
+  read notice chg-42 through b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431 at 1800000040
+
+call 3 at 1800000070: act.approve.approve by person:bob
+  ACCEPTED
+  clause (link 0, line 7): require read notice:thread/chg-42@b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431 by node:bob-phone ed25519:557bda3389cc35d391363e475ffee4b606bdbb8456dbb0bbcd0fcec36fe0cf1c within 1d
+  clause (link 0, line 8): cosign person:bob ed25519:c728493b4dd1939264133e4fa3cfc59a4e8f52f7944d829e2d4d6e92954aead6
+  why: The chain roots at person:alice = ed25519:a41a9587ce289297a7390c77bd3361d3ad0ceed9d790c3f676aca432e62495ae and every link verifies.
+  why: person:bob = ed25519:c728493b4dd1939264133e4fa3cfc59a4e8f52f7944d829e2d4d6e92954aead6 may 'change.approve:approve' at node:change-desk = 9f78809ae874695a38c2c9f3f2eeadd4de5e713be664ab896a9af14c392a5882.
+  why: Every condition of every link is met by the proofs presented.
+
+third person, a fresh verifier with only the pasted chain, request and proofs:
+  ACCEPTED
+  clause (link 0, line 7): require read notice:thread/chg-42@b5d148ca3816805b648a5e1173c4f224be5d68f6b9a1c7103eaf19a87d846431 by node:bob-phone ed25519:557bda3389cc35d391363e475ffee4b606bdbb8456dbb0bbcd0fcec36fe0cf1c within 1d
+  clause (link 0, line 8): cosign person:bob ed25519:c728493b4dd1939264133e4fa3cfc59a4e8f52f7944d829e2d4d6e92954aead6
+  why: The chain roots at person:alice = ed25519:a41a9587ce289297a7390c77bd3361d3ad0ceed9d790c3f676aca432e62495ae and every link verifies.
+  why: person:bob = ed25519:c728493b4dd1939264133e4fa3cfc59a4e8f52f7944d829e2d4d6e92954aead6 may 'change.approve:approve' at node:change-desk = 9f78809ae874695a38c2c9f3f2eeadd4de5e713be664ab896a9af14c392a5882.
+  why: Every condition of every link is met by the proofs presented.

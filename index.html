@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Read Before You Act</title>
+<meta name="description" content="An approve key that only works after a signed read receipt. Press approve and see the exact clause that refuses it; open the notice and the same call goes through.">
+<meta property="og:title" content="Read it before you can act"><meta property="og:description" content="An approve key that only works after your device signs a read receipt for the exact notice. Anyone can re-check the verdict offline.">
+<meta name="theme-color" content="#070807">
+<link rel="icon" href="https://design.ce-net.com/v1/logo/ce-net-favicon-dark.svg" type="image/svg+xml">
+<style>
+@font-face{font-family:Geist;font-weight:100 900;font-display:swap;src:url(https://ce-net.com/assets/fonts/g-geist-v5-gyByhwUxId8gMEwcGFU.woff2) format("woff2")}
+@font-face{font-family:"JetBrains Mono";font-weight:400 600;font-display:swap;src:url(https://fonts.gstatic.com/s/jetbrainsmono/v24/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwg.woff2) format("woff2")}
+@font-face{font-family:Michroma;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/michroma/v21/PN_zRfy9qWD8fEagAPg9pTk.woff2) format("woff2")}
+:root{color-scheme:dark;
+  --ground:#070807;--surface:#0d0f0d;--well:#141614;--raise:#1c1f1c;--panel:rgba(10,12,10,.78);
+  --ink:#f2f3ef;--ink-2:#8a8f87;--ink-3:#5d625b;--line:rgba(255,255,255,.10);--line-2:rgba(255,255,255,.14);
+  --hover:rgba(255,255,255,.04);--press:rgba(255,255,255,.08);
+  --acc:#f5a524;--acc-hi:#ffc35a;--acc-ink:#130d00;--acc-soft:rgba(245,165,36,.14);
+  --ok:#9bd16b;--ok-soft:rgba(155,209,107,.12);--bad:#ef4444;--bad-soft:rgba(239,68,68,.12);
+  --sans:Geist,Inter,system-ui,-apple-system,sans-serif;--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --disp:Michroma,system-ui,sans-serif;
+  --t-2xs:9.5px;--t-xs:10.5px;--t-sm:12px;--t-md:13px;--t-base:15px;--t-xl:clamp(19px,2.4vw,27px);--t-2xl:clamp(24px,3.4vw,40px);
+  --r:3px;--r-sm:2px;--tick:8px;--m:clamp(16px,3vw,40px);--max:1120px;--ease:cubic-bezier(.2,.7,.1,1)}
+:root[data-theme="light"]{color-scheme:light;
+  --ground:#f2f2ee;--surface:#fff;--well:#e8e8e3;--raise:#f7f7f4;--panel:rgba(255,255,255,.86);
+  --ink:#0d0f0d;--ink-2:#5d625b;--ink-3:#8a8f87;--line:rgba(13,15,13,.12);--line-2:rgba(13,15,13,.2);
+  --hover:rgba(13,15,13,.04);--press:rgba(13,15,13,.07);
+  --acc:#b8730a;--acc-hi:#d98a10;--acc-ink:#fff;--acc-soft:rgba(184,115,10,.12);
+  --ok:#3f8f2a;--ok-soft:rgba(63,143,42,.10);--bad:#dc2626;--bad-soft:rgba(220,38,38,.08)}
+*,*::before,*::after{box-sizing:border-box}
+html,body{background:var(--ground)}
+body{margin:0;color:var(--ink);font:400 var(--t-base)/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+:focus-visible{outline:1px solid var(--acc);outline-offset:2px}
+a{color:var(--acc)}
+.wrap{max-width:var(--max);margin:0 auto;padding:20px var(--m) 64px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.crumb{font:500 10px var(--mono);letter-spacing:.18em;color:var(--ink-2);text-transform:uppercase}
+.crumb b{color:var(--acc);font-weight:500}
+.display{margin:18px 0 10px;font:400 var(--t-2xl)/1.15 var(--disp);letter-spacing:.06em;text-transform:uppercase}
+.lede{max-width:68ch;color:var(--ink-2);margin:0 0 6px}
+.label{font:500 var(--t-2xs) var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.label i{width:6px;height:6px;border-radius:50%;background:var(--acc);flex:none}
+.label i.g{background:var(--ok)}.label i.r{background:var(--bad)}
+.glass{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.ticks::before,.ticks::after{content:"";position:absolute;width:var(--tick);height:var(--tick);border:1px solid var(--acc);pointer-events:none}
+.ticks::before{left:-1px;top:-1px;border-right:0;border-bottom:0}.ticks::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--well);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r-sm);
+  padding:9px 14px;font:500 var(--t-md) var(--sans);cursor:pointer;min-height:40px}
+.btn:hover{background:var(--press)}.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.tog{background:none;border:1px solid var(--line-2);color:var(--ink-2);border-radius:var(--r-sm);padding:4px 9px;font:500 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.route{margin:14px 0 22px;font:400 var(--t-xs) var(--mono);color:var(--ink-3)}
+.route b{color:var(--ink-2);font-weight:500}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:900px){.steps{grid-template-columns:1fr}}
+.card{padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h2{margin:0;font:500 var(--t-base) var(--sans)}
+.n{font:500 var(--t-xs) var(--mono);color:var(--acc)}
+.muted{color:var(--ink-2);font-size:var(--t-sm)}
+.notice{border:1px dashed var(--line-2);border-radius:var(--r);padding:12px;font-size:var(--t-sm)}
+.notice .t{font-weight:500}
+.notice .b{color:var(--ink-2);margin-top:6px}
+.notice.sealed .b{filter:blur(4px);user-select:none}
+pre,code,.mono{font-family:var(--mono)}
+pre.cal{margin:0;padding:12px;background:var(--well);border-radius:var(--r);font-size:11.5px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+pre.cal .hl{background:var(--acc-soft);color:var(--ink);box-shadow:0 0 0 1px var(--acc)}
+pre.cal .c{color:var(--ink-3)}
+.verdict{border-radius:var(--r);padding:12px;font-size:var(--t-sm);display:none}
+.verdict.show{display:block}
+.verdict.no{background:var(--bad-soft);border:1px solid var(--bad)}
+.verdict.yes{background:var(--ok-soft);border:1px solid var(--ok)}
+.verdict .head{font:600 var(--t-md) var(--mono);letter-spacing:.04em}
+.verdict.no .head{color:var(--bad)}.verdict.yes .head{color:var(--ok)}
+.verdict .clause{margin:8px 0 6px;padding:8px;background:var(--well);border-left:2px solid var(--acc);font:400 11.5px/1.5 var(--mono);word-break:break-all}
+.verdict ul{margin:6px 0 0;padding-left:18px;color:var(--ink-2)}
+.receipt{font:400 11px/1.5 var(--mono);color:var(--ink-2);word-break:break-all;display:none}
+.receipt.show{display:block}
+.receipt b{color:var(--ok);font-weight:600}
+section{margin-top:28px}
+section > h3{margin:0 0 10px;font:500 var(--t-2xs) var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.log li{display:grid;grid-template-columns:76px 150px 1fr;gap:10px;padding:8px 12px;font:400 var(--t-sm) var(--mono);border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+@media (max-width:640px){.log li{grid-template-columns:1fr}}
+.log .y{color:var(--ok)}.log .x{color:var(--bad)}.log .r{color:var(--acc)}
+textarea{width:100%;min-height:150px;resize:vertical;background:var(--well);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r);padding:10px;font:400 11px/1.5 var(--mono)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.offline{display:none;border:1px solid var(--acc);background:var(--acc-soft);border-radius:var(--r);padding:12px;font-size:var(--t-sm);margin-bottom:16px}
+.offline.show{display:block}
+.offline code{background:var(--well);padding:1px 4px;border-radius:2px}
+footer{margin-top:40px;font:400 var(--t-xs) var(--mono);color:var(--ink-3)}
+</style></head>
+<body><div class="wrap">
+<header><div class="crumb">ce-net / Demos / <b>Read before you act</b></div>
+<button class="tog" type="button" id="tog" aria-label="Switch between dark and light">Light</button></header>
+
+<h1 class="display">Read it before you can act.</h1>
+<p class="lede">Alice sends Bob a change notice and a key to approve the change. The key says: <em>only after a signed read receipt for this notice</em>. Press approve before reading and the page shows the exact clause that refuses it. Open the notice, Bob's phone signs a receipt, and the same approve goes through.</p>
+
+<div class="offline" id="offline">This copy is static, so it shows the <b>recorded run</b> (proof/transcript.json). To press the buttons yourself, run it locally:
+<code>git clone https://github.com/ce-net/demo-demo-read-before-act &amp;&amp; cd demo-demo-read-before-act &amp;&amp; cargo run -p demo-read-before-act -- up</code> and open <code>http://127.0.0.1:7400/</code>.</div>
+<div class="route" id="route">route: <b>connecting...</b></div>
+
+<div class="steps">
+  <article class="glass card">
+    <div class="n">01 · msg.notice</div>
+    <h2>Alice's notice to Bob</h2>
+    <div class="notice sealed" id="notice"><div class="t" id="ntitle">...</div><div class="b" id="nbody">The text appears when Bob opens it.</div></div>
+    <div class="row"><button class="btn" id="open" type="button">Open the notice</button></div>
+    <div class="receipt" id="receipt"></div>
+  </article>
+  <article class="glass card ticks">
+    <div class="n">02 · the key</div>
+    <h2>Bob's approve key, as CAL</h2>
+    <pre class="cal" id="cal">...</pre>
+    <div class="muted">One signed link from Alice. The <span class="mono">require read</span> line pins the notice by the SHA-256 of its text, and names Bob's phone as the only key that can vouch he read it.</div>
+  </article>
+  <article class="glass card">
+    <div class="n">03 · act.approve</div>
+    <h2>Approve the change</h2>
+    <div class="muted mono" id="change">...</div>
+    <div class="row"><button class="btn primary" id="approve" type="button">Approve as Bob</button></div>
+    <div class="verdict" id="verdict" role="status" aria-live="polite"></div>
+  </article>
+</div>
+
+<section>
+  <h3>Calls</h3>
+  <ul class="log" id="log"></ul>
+</section>
+
+<section>
+  <h3>Check it on your own machine · cal.explain</h3>
+  <p class="muted">Paste the evidence of any approve: the chain, the exact request, the proofs (receipt and co-signature), the body and the time. The verdict comes from ce-net-proto's verifier and nothing else; <span class="mono">ce-net-capability-verify</span> (Python, one file) gives the same answer offline.</p>
+  <textarea id="evidence" spellcheck="false" aria-label="Evidence JSON" placeholder='{"token": "...", "request": "...", "proofs": "...", "body": "...", "now": 1800000070}'></textarea>
+  <div class="row" style="margin-top:8px">
+    <button class="btn" id="verify" type="button">Verify</button>
+    <button class="btn" id="load3" type="button">Load recorded call 3 (accepted)</button>
+    <button class="btn" id="load1" type="button">Load recorded call 1 (refused)</button>
+    <button class="btn" id="reset" type="button">Start over</button>
+  </div>
+  <div class="verdict" id="verdict2" role="status" aria-live="polite" style="margin-top:10px"></div>
+</section>
+
+<footer>Apache-2.0 · <a href="https://github.com/ce-net/demo-demo-read-before-act">source, transcript and golden vectors</a> · built on <a href="https://github.com/ce-net/ce-net-proto">ce-net-proto</a> (chains and CAL) and <a href="https://github.com/ce-net/ce-net-local-dev-sim">ce-net-local-dev-sim</a> · <a href="https://ce-net.github.io/demos/">all demos</a></footer>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+let live = false, recorded = null, calSrc = "";
+try { if (localStorage.getItem("ce-theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+const setTog = () => $("tog").textContent = document.documentElement.dataset.theme === "light" ? "Dark" : "Light";
+setTog();
+$("tog").onclick = () => {
+  const light = document.documentElement.dataset.theme !== "light";
+  if (light) document.documentElement.dataset.theme = "light"; else delete document.documentElement.dataset.theme;
+  try { localStorage.setItem("ce-theme", light ? "light" : "dark"); } catch (e) {}
+  setTog();
+};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const short = h => h && h.length > 24 ? h.slice(0, 12) + "..." + h.slice(-8) : h;
+
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+
+function showCal(src, clauses) {
+  const hl = new Set((clauses || []).map(c => c.text.split(" ")[0] + " " + c.text.split(" ")[1]));
+  $("cal").innerHTML = src.split("\n").map(l => {
+    const t = l.trim();
+    if (t.startsWith("#")) return `<span class="c">${esc(l)}</span>`;
+    const k = t.split(" ")[0] + " " + t.split(" ")[1];
+    return hl.has(k) ? `<span class="hl">${esc(l)}</span>` : esc(l);
+  }).join("\n");
+}
+
+function verdictHtml(v, clauses) {
+  const yes = v.allowed;
+  let h = `<div class="head">${yes ? "ACCEPTED" : "REFUSED: " + esc(v.reason)}</div>`;
+  for (const c of clauses || []) h += `<div class="clause">${yes ? "met" : "refused by"} (link ${c.link}, line ${c.line}): ${esc(c.text)}</div>`;
+  if (v.why && v.why.length) h += "<ul>" + v.why.map(w => `<li>${esc(w)}</li>`).join("") + "</ul>";
+  return h;
+}
+
+function setVerdict(el, v, clauses) {
+  el.className = "verdict show " + (v.allowed ? "yes" : "no");
+  el.innerHTML = verdictHtml(v, clauses);
+}
+
+function showReceipt(r) {
+  if (!r) { $("receipt").className = "receipt"; return; }
+  $("receipt").className = "receipt show";
+  $("receipt").innerHTML = `<b>RECEIPT SIGNED</b> by bob-phone ${esc(short(r.witness))}<br>about ${esc(short(r.subject))}<br>read ${esc(r.notice)} through ${esc(short(r.read_through))} at ${esc(r.at)}<br>receipt ${esc(short(r.receipt_hex))}`;
+}
+
+function logRow(at, call, cls, text) {
+  const li = document.createElement("li");
+  li.innerHTML = `<span>${esc(at)}</span><span>${esc(call)}</span><span class="${cls}">${esc(text)}</span>`;
+  $("log").appendChild(li);
+}
+
+async function refresh(first) {
+  const s = await api("/api/state");
+  live = true;
+  $("route").innerHTML = "route: <b>" + esc(s.route) + "</b>" + Object.entries(s.cells || {}).map(([c, u]) => `<br>${esc(c)} -> ${esc(u)}`).join("");
+  $("ntitle").textContent = s.notice.title + "  (from " + s.notice.from + ")";
+  $("change").textContent = s.change;
+  calSrc = s.cal;
+  showCal(calSrc, []);
+  showReceipt(s.receipt);
+  $("log").innerHTML = "";
+  for (const e of s.log) {
+    if (e.call === "msg.notice.open") logRow(e.at, "msg.notice.open", "r", "receipt signed " + short(e.receipt));
+    else logRow(e.at, "act.approve", e.allowed ? "y" : "x", e.allowed ? "accepted" + (e.with_receipt ? " (with receipt)" : "") : "refused: " + e.reason);
+  }
+  if (s.receipt) { $("notice").classList.remove("sealed"); $("nbody").textContent = s.notice.body || $("nbody").textContent; }
+  const last = s.log.filter(e => e.call !== "msg.notice.open").pop();
+  if (first && last) {
+    setVerdict($("verdict"), { allowed: last.allowed, reason: last.reason, why: [] }, last.clauses);
+    if (!last.allowed) showCal(calSrc, last.clauses);
+  }
+}
+
+$("open").onclick = async () => {
+  if (!live) return;
+  try {
+    const o = await api("/api/open", {});
+    $("notice").classList.remove("sealed");
+    $("nbody").textContent = o.notice.body;
+    await refresh();
+  } catch (e) { alert(e.message); }
+};
+
+$("approve").onclick = async () => {
+  if (!live) return;
+  try {
+    const o = await api("/api/approve", {});
+    setVerdict($("verdict"), o.verdict, o.clauses);
+    $("evidence").value = JSON.stringify(o.evidence, null, 1);
+    await refresh();
+    if (!o.verdict.allowed) showCal(calSrc, o.clauses);
+  } catch (e) { alert(e.message); }
+};
+
+$("verify").onclick = async () => {
+  let ev;
+  try { ev = JSON.parse($("evidence").value); } catch (e) { alert("The evidence is not JSON."); return; }
+  if (!live) { alert("Verifying needs the local server (cargo run -p demo-read-before-act -- up), or run ce-net-capability-verify on proof/vectors.json."); return; }
+  try {
+    const o = await api("/api/verify", { evidence: ev });
+    setVerdict($("verdict2"), o.verdict, o.clauses);
+  } catch (e) { $("verdict2").className = "verdict show no"; $("verdict2").innerHTML = `<div class="head">COULD NOT READ: ${esc(e.message)}</div>`; }
+};
+
+function recordedEvidence(n) {
+  const c = recorded.calls[n - 1];
+  return { token: c.presented.token, request: c.presented.request, proofs: c.presented.proofs, body: c.presented.body, now: c.at };
+}
+async function loadRecorded() {
+  if (!recorded) recorded = await (await fetch("proof/transcript.json")).json();
+  return recorded;
+}
+$("load3").onclick = async () => { await loadRecorded(); $("evidence").value = JSON.stringify(recordedEvidence(3), null, 1); };
+$("load1").onclick = async () => { await loadRecorded(); $("evidence").value = JSON.stringify(recordedEvidence(1), null, 1); };
+$("reset").onclick = async () => {
+  if (!live) return;
+  await api("/api/reset", {});
+  $("notice").classList.add("sealed"); $("nbody").textContent = "The text appears when Bob opens it.";
+  $("verdict").className = "verdict"; $("verdict2").className = "verdict"; $("evidence").value = "";
+  await refresh();
+};
+
+async function staticMode() {
+  // No local server (for example GitHub Pages): show the recorded run.
+  $("offline").classList.add("show");
+  $("route").innerHTML = "route: <b>recorded run (static page)</b>";
+  ["open", "approve", "reset"].forEach(id => $(id).disabled = true);
+  const t = await loadRecorded();
+  $("ntitle").textContent = t.notice.title + "  (from person:alice)";
+  $("notice").classList.remove("sealed"); $("nbody").textContent = t.notice.body;
+  $("change").textContent = t.calls[0].presented.body;
+  showCal(t.cal, t.calls[0].verdict.clauses);
+  showReceipt(t.calls[1].receipt);
+  setVerdict($("verdict"), t.calls[2].verdict, t.calls[2].verdict.clauses);
+  const v1 = t.calls[0].verdict;
+  logRow(t.calls[0].at, "act.approve", "x", "refused: " + v1.reason + "  |  " + v1.clauses[0].text);
+  logRow(t.calls[1].at, "msg.notice.open", "r", "receipt signed " + short(t.calls[1].receipt.receipt_hex));
+  logRow(t.calls[2].at, "act.approve", "y", "accepted (same request, with receipt)");
+  logRow(t.third_person.at, "cal.explain.verify", "y", "third person, fresh verifier: accepted");
+  $("evidence").value = JSON.stringify(recordedEvidence(3), null, 1);
+  setVerdict($("verdict2"), t.third_person.verdict, t.third_person.verdict.clauses);
+}
+
+refresh(true).catch(() => staticMode().catch(e => { $("route").textContent = "route: unavailable (" + e.message + ")"; }));
+</script>
+</body></html>

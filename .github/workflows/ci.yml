@@ -1,0 +1,40 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fresh-clone:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fresh clone of this commit and its public dependencies
+        run: |
+          git clone https://github.com/${{ github.repository }} demo && git -C demo checkout ${{ github.sha }}
+          git clone https://github.com/ce-net/ce-net-local-dev-sim
+          git clone https://github.com/ce-net/ce-net-capability-verify && git -C ce-net-capability-verify checkout c7cec41
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: demo
+      - name: Tests (three calls, transcript and vectors checked byte for byte)
+        working-directory: demo
+        run: cargo test --workspace --locked
+      - name: Re-record the transcript and vectors; nothing may change
+        working-directory: demo
+        run: |
+          cargo run -q --locked -p demo-read-before-act -- record
+          cargo run -q --locked -p demo-read-before-act -- vectors
+          git diff --exit-code proof
+      - name: Golden vectors offline with ce-net-capability-verify (Python, one file)
+        working-directory: ce-net-capability-verify
+        run: python3 verify.py use ../demo/proof/vectors.json
+      - name: The story on the local mesh (ce-net-local-dev-sim)
+        working-directory: demo
+        run: SIM=../ce-net-local-dev-sim/cenet_mock.py scripts/mesh-smoke.sh
